@@ -11,11 +11,11 @@ saucedemo-tests/
 │   ├── CartPage.ts           # หน้าตะกร้าสินค้า
 │   └── CheckoutPage.ts       # หน้า Checkout (Step 1, 2, Complete)
 ├── tests/                    # Test specs
-│   ├── login.spec.ts         # 12 test cases
+│   ├── login.spec.ts         # 11 test cases
 │   ├── cart.spec.ts          # 12 test cases
 │   ├── checkout.spec.ts      # 12 test cases
 │   ├── sorting.spec.ts       # 10 test cases
-│   └── logout.spec.ts        # 5 test cases
+│   └── logout.spec.ts        # 4 test cases
 ├── test-data/
 │   └── users.ts              # Test data & constants
 ├── playwright.config.ts
