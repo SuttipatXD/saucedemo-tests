@@ -1,0 +1,5 @@
+/node_modules
+/package-lock.json
+/playwright-report
+/SauceDemo_Test_Documentation.xlsx
+/test-results
