@@ -3,18 +3,20 @@
   "version": "1.0.0",
   "description": "Playwright POM tests for SauceDemo",
   "scripts": {
-    "test": "npx playwright test",
+    "test": "npx playwright test && node scripts/generate-dashboard.js && open dashboard.html",
     "test:headed": "npx playwright test --headed",
     "test:report": "npx playwright show-report",
     "test:login": "npx playwright test tests/login.spec.ts",
     "test:cart": "npx playwright test tests/cart.spec.ts",
     "test:checkout": "npx playwright test tests/checkout.spec.ts",
     "test:sorting": "npx playwright test tests/sorting.spec.ts",
-    "test:logout": "npx playwright test tests/logout.spec.ts"
+    "test:logout": "npx playwright test tests/logout.spec.ts",
+    "dashboard": "open dashboard.html"
   },
   "devDependencies": {
     "@playwright/test": "^1.44.0",
     "@types/node": "^25.6.0",
+    "dotenv": "^17.4.2",
     "typescript": "^5.4.5"
   }
 }

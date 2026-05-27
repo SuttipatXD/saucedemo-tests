@@ -1,5 +1,14 @@
+# Dependencies
 /node_modules
-/package-lock.json
+package-lock.json
+
+# Environment variables
+.env
+
+# Playwright
 /playwright-report
-/SauceDemo_Test_Documentation.xlsx
 /test-results
+
+# Documents
+/SauceDemo_Test_Documentation.xlsx
+*.html
