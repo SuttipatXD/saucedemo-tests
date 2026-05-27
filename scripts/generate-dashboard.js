@@ -202,7 +202,7 @@ const html = `<!DOCTYPE html>
     .progress-wrap { max-width: 900px; margin: 0 auto 2rem; background: var(--surface); border-radius: var(--radius); padding: 1.25rem 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
     .progress-label { display: flex; justify-content: space-between; font-size: .8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: .6rem; }
     .progress-bar { height: 10px; border-radius: 99px; background: var(--border); overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #059669, #34d399); }
+    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #059669, #34d399); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
     .section { max-width: 900px; margin: 0 auto 1.5rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden; }
     .section-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
