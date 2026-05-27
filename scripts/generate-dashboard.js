@@ -1,45 +1,107 @@
 #!/usr/bin/env node
 "use strict";
 
-const fs   = require("fs");
+const fs = require("fs");
 const path = require("path");
 
 const RESULTS_FILE = path.join(__dirname, "../test-results/results.json");
-const OUTPUT_FILE  = path.join(__dirname, "../dashboard.html");
+const OUTPUT_FILE = path.join(__dirname, "../dashboard.html");
 
 // ── Type classification per TC ID ────────────────────────────────────────────
 const TYPE_MAP = {
-  "TC-LOG-001": "Positive",  "TC-LOG-002": "Positive",  "TC-LOG-003": "Negative",
-  "TC-LOG-004": "Negative",  "TC-LOG-005": "Negative",  "TC-LOG-006": "Negative",
-  "TC-LOG-007": "Negative",  "TC-LOG-008": "Positive",  "TC-LOG-009": "Positive",
-  "TC-LOG-010": "Edge",      "TC-LOG-011": "Edge",
-  "TC-CART-001": "Positive", "TC-CART-002": "Positive", "TC-CART-003": "Positive",
-  "TC-CART-004": "Positive", "TC-CART-005": "Positive", "TC-CART-006": "Positive",
-  "TC-CART-007": "Negative", "TC-CART-008": "Negative", "TC-CART-009": "Negative",
-  "TC-CART-010": "Positive", "TC-CART-011": "Edge",     "TC-CART-012": "Edge",
-  "TC-CHK-001": "Positive",  "TC-CHK-002": "Positive",  "TC-CHK-003": "Positive",
-  "TC-CHK-004": "Positive",  "TC-CHK-005": "Negative",  "TC-CHK-006": "Negative",
-  "TC-CHK-007": "Negative",  "TC-CHK-008": "Negative",  "TC-CHK-009": "Positive",
-  "TC-CHK-010": "Positive",  "TC-CHK-011": "Positive",  "TC-CHK-012": "Edge",
-  "TC-SORT-001": "Positive", "TC-SORT-002": "Positive", "TC-SORT-003": "Positive",
-  "TC-SORT-004": "Positive", "TC-SORT-005": "Positive", "TC-SORT-006": "Positive",
-  "TC-SORT-007": "Positive", "TC-SORT-008": "Positive", "TC-SORT-009": "Positive",
+  "TC-LOG-001": "Positive",
+  "TC-LOG-002": "Positive",
+  "TC-LOG-003": "Negative",
+  "TC-LOG-004": "Negative",
+  "TC-LOG-005": "Negative",
+  "TC-LOG-006": "Negative",
+  "TC-LOG-007": "Negative",
+  "TC-LOG-008": "Positive",
+  "TC-LOG-009": "Positive",
+  "TC-LOG-010": "Edge",
+  "TC-LOG-011": "Edge",
+  "TC-CART-001": "Positive",
+  "TC-CART-002": "Positive",
+  "TC-CART-003": "Positive",
+  "TC-CART-004": "Positive",
+  "TC-CART-005": "Positive",
+  "TC-CART-006": "Positive",
+  "TC-CART-007": "Negative",
+  "TC-CART-008": "Negative",
+  "TC-CART-009": "Negative",
+  "TC-CART-010": "Positive",
+  "TC-CART-011": "Edge",
+  "TC-CART-012": "Edge",
+  "TC-CHK-001": "Positive",
+  "TC-CHK-002": "Positive",
+  "TC-CHK-003": "Positive",
+  "TC-CHK-004": "Positive",
+  "TC-CHK-005": "Negative",
+  "TC-CHK-006": "Negative",
+  "TC-CHK-007": "Negative",
+  "TC-CHK-008": "Negative",
+  "TC-CHK-009": "Positive",
+  "TC-CHK-010": "Positive",
+  "TC-CHK-011": "Positive",
+  "TC-CHK-012": "Edge",
+  "TC-SORT-001": "Positive",
+  "TC-SORT-002": "Positive",
+  "TC-SORT-003": "Positive",
+  "TC-SORT-004": "Positive",
+  "TC-SORT-005": "Positive",
+  "TC-SORT-006": "Positive",
+  "TC-SORT-007": "Positive",
+  "TC-SORT-008": "Positive",
+  "TC-SORT-009": "Positive",
   "TC-SORT-010": "Positive",
-  "TC-OUT-001": "Positive",  "TC-OUT-002": "Edge",      "TC-OUT-003": "Positive",
+  "TC-OUT-001": "Positive",
+  "TC-OUT-002": "Edge",
+  "TC-OUT-003": "Positive",
   "TC-OUT-004": "Positive",
 };
 
 // ── Feature metadata keyed by spec filename ───────────────────────────────────
 const FEATURE_META = {
-  "login.spec.ts":    { name: "Login",                    desc: "Authentication & session handling",       icon: "🔐", color: "#eef2ff" },
-  "cart.spec.ts":     { name: "Cart",                     desc: "Add, remove & cart state management",     icon: "🛒", color: "#fef3c7" },
-  "checkout.spec.ts": { name: "Checkout",                 desc: "Order flow, validation & summary",        icon: "💳", color: "#dcfce7" },
-  "sorting.spec.ts":  { name: "Product Listing & Sorting",desc: "Inventory display, sort order & detail",  icon: "🔃", color: "#fce7f3" },
-  "logout.spec.ts":   { name: "Logout",                   desc: "Session termination & re-authentication", icon: "🚪", color: "#fde8d8" },
+  "login.spec.ts": {
+    name: "Login",
+    desc: "Authentication & session handling",
+    icon: "🔐",
+    color: "#eef2ff",
+  },
+  "cart.spec.ts": {
+    name: "Cart",
+    desc: "Add, remove & cart state management",
+    icon: "🛒",
+    color: "#fef3c7",
+  },
+  "checkout.spec.ts": {
+    name: "Checkout",
+    desc: "Order flow, validation & summary",
+    icon: "💳",
+    color: "#dcfce7",
+  },
+  "sorting.spec.ts": {
+    name: "Product Listing & Sorting",
+    desc: "Inventory display, sort order & detail",
+    icon: "🔃",
+    color: "#fce7f3",
+  },
+  "logout.spec.ts": {
+    name: "Logout",
+    desc: "Session termination & re-authentication",
+    icon: "🚪",
+    color: "#fde8d8",
+  },
 };
 
 // ── File order ────────────────────────────────────────────────────────────────
-const FILE_ORDER = ["login.spec.ts","cart.spec.ts","checkout.spec.ts","sorting.spec.ts","logout.spec.ts"];
+const FILE_ORDER = [
+  "login.spec.ts",
+  "cart.spec.ts",
+  "checkout.spec.ts",
+  "sorting.spec.ts",
+  "logout.spec.ts",
+];
 
 // ── Read results ──────────────────────────────────────────────────────────────
 if (!fs.existsSync(RESULTS_FILE)) {
@@ -47,15 +109,15 @@ if (!fs.existsSync(RESULTS_FILE)) {
   process.exit(1);
 }
 
-const data  = JSON.parse(fs.readFileSync(RESULTS_FILE, "utf-8"));
+const data = JSON.parse(fs.readFileSync(RESULTS_FILE, "utf-8"));
 const stats = data.stats || {};
 
 // ── Collect specs grouped by file ─────────────────────────────────────────────
 const byFile = {};
 
 function collectSpecs(suite, fileName) {
-  for (const spec of (suite.specs || [])) {
-    const m    = spec.title.match(/^(TC-[A-Z]+-\d+)[:\s]*(.*)/);
+  for (const spec of suite.specs || []) {
+    const m = spec.title.match(/^(TC-[A-Z]+-\d+)[:\s]*(.*)/);
     const tcId = m ? m[1] : "";
     const desc = m ? m[2].trim() : spec.title;
 
@@ -63,73 +125,108 @@ function collectSpecs(suite, fileName) {
     let duration = 0;
     if (spec.tests && spec.tests.length > 0) {
       const t = spec.tests[0];
-      status   = t.status === "skipped" ? "skip" : t.status === "expected" ? "pass" : "fail";
+      status =
+        t.status === "skipped"
+          ? "skip"
+          : t.status === "expected"
+            ? "pass"
+            : "fail";
       duration = (t.results && t.results[0] && t.results[0].duration) || 0;
     }
 
     byFile[fileName] = byFile[fileName] || [];
-    byFile[fileName].push({ tcId, desc, type: TYPE_MAP[tcId] || "Positive", status, duration });
+    byFile[fileName].push({
+      tcId,
+      desc,
+      type: TYPE_MAP[tcId] || "Positive",
+      status,
+      duration,
+    });
   }
-  for (const child of (suite.suites || [])) collectSpecs(child, fileName);
+  for (const child of suite.suites || []) collectSpecs(child, fileName);
 }
 
-for (const fileSuite of (data.suites || [])) {
+for (const fileSuite of data.suites || []) {
   const fileName = path.basename(fileSuite.file || fileSuite.title || "");
   collectSpecs(fileSuite, fileName);
 }
 
 // ── Build ordered feature list ────────────────────────────────────────────────
-const features = FILE_ORDER.map(f => ({
+const features = FILE_ORDER.map((f) => ({
   fileName: f,
   ...(FEATURE_META[f] || { name: f, desc: "", icon: "🧪", color: "#f1f5f9" }),
   specs: byFile[f] || [],
 }));
 
 // ── Aggregate counts ──────────────────────────────────────────────────────────
-const allSpecs   = features.flatMap(f => f.specs);
-const cntTotal   = allSpecs.length;
-const cntPass    = allSpecs.filter(s => s.status === "pass").length;
-const cntFail    = allSpecs.filter(s => s.status === "fail").length;
-const cntSkip    = allSpecs.filter(s => s.status === "skip").length;
-const passRate   = cntTotal ? Math.round(cntPass / cntTotal * 100) : 0;
-const totalMs    = stats.duration || 0;
-const durationStr = totalMs >= 60000
-  ? `${Math.floor(totalMs/60000)}m ${Math.round((totalMs%60000)/1000)}s`
-  : `${(totalMs/1000).toFixed(1)}s`;
-const startTime  = stats.startTime
-  ? new Date(stats.startTime).toLocaleString("th-TH", { year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit" })
-  : new Date().toLocaleString("th-TH", { year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit" });
+const allSpecs = features.flatMap((f) => f.specs);
+const cntTotal = allSpecs.length;
+const cntPass = allSpecs.filter((s) => s.status === "pass").length;
+const cntFail = allSpecs.filter((s) => s.status === "fail").length;
+const cntSkip = allSpecs.filter((s) => s.status === "skip").length;
+const passRate = cntTotal ? Math.round((cntPass / cntTotal) * 100) : 0;
+const totalMs = stats.duration || 0;
+const durationStr =
+  totalMs >= 60000
+    ? `${Math.floor(totalMs / 60000)}m ${Math.round((totalMs % 60000) / 1000)}s`
+    : `${(totalMs / 1000).toFixed(1)}s`;
+const startTime = stats.startTime
+  ? new Date(stats.startTime).toLocaleString("th-TH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : new Date().toLocaleString("th-TH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function typePill(type) {
-  const cls = { Positive: "type-positive", Negative: "type-negative", Edge: "type-edge" }[type] || "type-positive";
+  const cls =
+    { Positive: "type-positive", Negative: "type-negative", Edge: "type-edge" }[
+      type
+    ] || "type-positive";
   return `<span class="tc-type ${cls}">${type}</span>`;
 }
 function statusBadge(status) {
-  const map = { pass: ["s-pass","Pass"], fail: ["s-fail","Fail"], skip: ["s-skip","Skip"] };
-  const [cls, label] = map[status] || ["s-skip","—"];
+  const map = {
+    pass: ["s-pass", "Pass"],
+    fail: ["s-fail", "Fail"],
+    skip: ["s-skip", "Skip"],
+  };
+  const [cls, label] = map[status] || ["s-skip", "—"];
   return `<span class="status-badge ${cls}">${label}</span>`;
 }
 function durStr(ms) {
   if (!ms) return "—";
-  return ms >= 1000 ? `${(ms/1000).toFixed(2)}s` : `${ms}ms`;
+  return ms >= 1000 ? `${(ms / 1000).toFixed(2)}s` : `${ms}ms`;
 }
 function featureRows(specs) {
-  return specs.map(s =>
-    `<tr>
+  return specs
+    .map(
+      (s) =>
+        `<tr>
       <td class="tc-id">${s.tcId || "—"}</td>
       <td>${s.desc}</td>
       <td>${typePill(s.type)}</td>
       <td>${statusBadge(s.status)}</td>
       <td style="text-align:right;color:var(--text-muted);font-size:.78rem;">${durStr(s.duration)}</td>
-    </tr>`
-  ).join("\n        ");
+    </tr>`,
+    )
+    .join("\n        ");
 }
 function featureSection(f, idx) {
-  const pass  = f.specs.filter(s => s.status === "pass").length;
-  const fail  = f.specs.filter(s => s.status === "fail").length;
+  const pass = f.specs.filter((s) => s.status === "pass").length;
+  const fail = f.specs.filter((s) => s.status === "fail").length;
   const total = f.specs.length;
-  const pillFail = fail > 0 ? `<span class="pill pill-fail">${fail} failed</span>` : "";
+  const pillFail =
+    fail > 0 ? `<span class="pill pill-fail">${fail} failed</span>` : "";
   return `
   <div class="section open" id="s-${idx}">
     <div class="section-header" onclick="toggle('s-${idx}')">
@@ -296,4 +393,3 @@ ${features.map((f, i) => featureSection(f, i)).join("\n")}
 </html>`;
 
 fs.writeFileSync(OUTPUT_FILE, html, "utf-8");
-console.log(`✅  dashboard.html generated — ${cntPass}/${cntTotal} passed (${passRate}%)`);
